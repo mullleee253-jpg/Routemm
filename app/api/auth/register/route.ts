@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-
-// Хранилище пользователей (в продакшене использовать БД)
-const users: any[] = []
+import { users } from '@/lib/users'
 
 export async function POST(request: Request) {
   try {
@@ -60,6 +58,3 @@ export async function POST(request: Request) {
     )
   }
 }
-
-// Экспорт для доступа из других API
-export { users }
