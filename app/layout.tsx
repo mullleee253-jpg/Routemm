@@ -1,6 +1,7 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import DevToolsProtection from '@/components/DevToolsProtection'
+import { Analytics } from '@vercel/analytics/next'
 
 export const metadata: Metadata = {
   title: 'Routeem - Безопасный мессенджер',
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body>
         <DevToolsProtection />
         {children}
+        <Analytics />
       </body>
     </html>
   )
