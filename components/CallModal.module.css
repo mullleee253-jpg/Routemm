@@ -1,0 +1,156 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.modal {
+  width: 100%;
+  max-width: 800px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.4s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.videoArea {
+  flex: 1;
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+.remoteVideo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 700;
+  color: white;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.localVideo {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 150px;
+  height: 200px;
+  background: #2a2a2a;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.miniAvatar {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.info {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  margin: 0 0 0.5rem 0;
+}
+
+.status {
+  font-size: 1.2rem;
+  color: #999;
+  margin: 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+.controlBtn {
+  width: 60px;
+  height: 60px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.8rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controlBtn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.controlBtn.active {
+  background: rgba(255, 82, 82, 0.3);
+}
+
+.endCallBtn {
+  width: 70px;
+  height: 70px;
+  border: none;
+  background: #ff5252;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(135deg);
+}
+
+.endCallBtn:hover {
+  background: #ff1744;
+  transform: rotate(135deg) scale(1.1);
+  box-shadow: 0 8px 24px rgba(255, 82, 82, 0.5);
+}
