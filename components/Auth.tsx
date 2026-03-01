@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './Auth.module.css'
 
 export default function Auth({ onAuth }: { onAuth: (user: any) => void }) {
@@ -7,13 +7,31 @@ export default function Auth({ onAuth }: { onAuth: (user: any) => void }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  const [username, setUsername] = useState('')
+
+  useEffect(() => {
+    // Проверка сохраненной сессии
+    const token = localStorage.getItem('token')
+    const savedUser = localStorage.getItem('user')
+    
+    if (token && savedUser) {
+      try {
+        const user = JSON.parse(savedUser)
+        onAuth(user)
+      } catch (error) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+      }
+    }
+  }, [onAuth])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    // Реальная авторизация через API
     const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register'
-    const body = isLogin ? { email, password } : { email, password, name }
+    const body = isLogin 
+      ? { email, password } 
+      : { email, password, name, username }
     
     try {
       const res = await fetch(endpoint, {
@@ -26,6 +44,7 @@ export default function Auth({ onAuth }: { onAuth: (user: any) => void }) {
       
       if (res.ok) {
         localStorage.setItem('token', data.token)
+        localStorage.setItem('user', JSON.stringify(data.user))
         onAuth(data.user)
       } else {
         alert(data.error || 'Ошибка авторизации')
@@ -44,14 +63,24 @@ export default function Auth({ onAuth }: { onAuth: (user: any) => void }) {
         
         <form onSubmit={handleSubmit} className={styles.form}>
           {!isLogin && (
-            <input
-              type="text"
-              placeholder="Имя"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={styles.input}
-              required
-            />
+            <>
+              <input
+                type="text"
+                placeholder="Имя"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className={styles.input}
+                required
+              />
+              <input
+                type="text"
+                placeholder="Username (уникальный)"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className={styles.input}
+                required
+              />
+            </>
           )}
           <input
             type="email"

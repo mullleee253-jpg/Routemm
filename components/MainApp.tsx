@@ -53,7 +53,7 @@ export default function MainApp({ user, onLogout }: { user: any; onLogout: () =>
 
         {activeTab === 'chats' && <ChatList onSelectChat={setSelectedChat} />}
         {activeTab === 'calls' && <Calls />}
-        {activeTab === 'friends' && <Friends />}
+        {activeTab === 'friends' && <Friends user={user} />}
         {activeTab === 'settings' && <Settings user={user} onLogout={onLogout} />}
       </div>
 

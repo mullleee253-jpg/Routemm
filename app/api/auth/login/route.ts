@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
-
-// Простое хранилище (в продакшене использовать БД)
-const users: any[] = []
+import { users } from '../register/route'
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +19,14 @@ export async function POST(request: Request) {
     const token = Buffer.from(`${user.id}:${user.email}`).toString('base64')
 
     return NextResponse.json({
-      user: { id: user.id, email: user.email, name: user.name },
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        name: user.name,
+        username: user.username,
+        friends: user.friends || [],
+        friendRequests: user.friendRequests || []
+      },
       token
     })
   } catch (error) {

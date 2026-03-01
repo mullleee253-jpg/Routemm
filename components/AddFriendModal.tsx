@@ -4,19 +4,42 @@ import styles from './AddFriendModal.module.css'
 
 export default function AddFriendModal({ 
   onClose, 
-  onAdd 
+  onAdd,
+  userId
 }: { 
   onClose: () => void; 
-  onAdd: (username: string) => void 
+  onAdd: (username: string) => void;
+  userId: number
 }) {
   const [username, setUsername] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (username.trim()) {
-      onAdd(username)
-      setUsername('')
-      onClose()
+    if (!username.trim()) return
+
+    setLoading(true)
+    try {
+      const res = await fetch('/api/friends/request', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fromUserId: userId, toUsername: username })
+      })
+
+      const data = await res.json()
+
+      if (res.ok) {
+        alert('Заявка отправлена!')
+        onAdd(username)
+        setUsername('')
+        onClose()
+      } else {
+        alert(data.error || 'Ошибка отправки заявки')
+      }
+    } catch (error) {
+      alert('Ошибка подключения')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -32,23 +55,24 @@ export default function AddFriendModal({
           <div className={styles.icon}>👤</div>
           
           <div className={styles.inputGroup}>
-            <label className={styles.label}>Имя пользователя или ID</label>
+            <label className={styles.label}>Username пользователя</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="@username или ID"
+              placeholder="username"
               className={styles.input}
               autoFocus
+              disabled={loading}
             />
           </div>
 
           <div className={styles.actions}>
-            <button type="button" onClick={onClose} className={styles.cancelBtn}>
+            <button type="button" onClick={onClose} className={styles.cancelBtn} disabled={loading}>
               Отмена
             </button>
-            <button type="submit" className={styles.addBtn}>
-              Добавить
+            <button type="submit" className={styles.addBtn} disabled={loading}>
+              {loading ? 'Отправка...' : 'Отправить заявку'}
             </button>
           </div>
         </form>

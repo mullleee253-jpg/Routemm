@@ -1,17 +1,26 @@
 import { NextResponse } from 'next/server'
 
-// Простое хранилище пользователей (в продакшене использовать БД)
+// Хранилище пользователей (в продакшене использовать БД)
 const users: any[] = []
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json()
+    const { email, password, name, username } = await request.json()
 
-    // Проверка существующего пользователя
-    const existingUser = users.find(u => u.email === email)
-    if (existingUser) {
+    // Проверка существующего email
+    const existingEmail = users.find(u => u.email === email)
+    if (existingEmail) {
       return NextResponse.json(
-        { error: 'Пользователь уже существует' },
+        { error: 'Email уже используется' },
+        { status: 400 }
+      )
+    }
+
+    // Проверка существующего username
+    const existingUsername = users.find(u => u.username === username)
+    if (existingUsername) {
+      return NextResponse.json(
+        { error: 'Username уже занят' },
         { status: 400 }
       )
     }
@@ -21,17 +30,27 @@ export async function POST(request: Request) {
       id: Date.now(),
       email,
       name,
+      username,
       password, // В продакшене хешировать с bcrypt
+      friends: [],
+      friendRequests: [],
       createdAt: new Date()
     }
 
     users.push(user)
 
-    // Генерация токена (в продакшене использовать JWT)
+    // Генерация токена
     const token = Buffer.from(`${user.id}:${user.email}`).toString('base64')
 
     return NextResponse.json({
-      user: { id: user.id, email: user.email, name: user.name },
+      user: { 
+        id: user.id, 
+        email: user.email, 
+        name: user.name,
+        username: user.username,
+        friends: user.friends,
+        friendRequests: user.friendRequests
+      },
       token
     })
   } catch (error) {
@@ -41,3 +60,6 @@ export async function POST(request: Request) {
     )
   }
 }
+
+// Экспорт для доступа из других API
+export { users }
